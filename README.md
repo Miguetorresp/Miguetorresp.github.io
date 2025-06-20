@@ -28,7 +28,7 @@ Este repositorio contiene el código fuente de mi Currículum Vitae en formato w
 - **Enlaces Descriptivos:**  
   Se mejoraron textos de botones y enlaces (evitando textos genéricos como "haz clic aquí") para que sean autoexplicativos, por ejemplo, cambiando "Ver más" por "Ver proyecto".
 
-### f. Tamaño de Fuente Ajustable
+### f. Tamaño de Fuente, Contraste y Subir al Inicio
 - **Botones de Accesibilidad:**  
   - Se añadieron botones flotantes que permiten a los usuarios aumentar el tamaño del texto o restablecerlo, cambiar el contraste y un botón para subir al inicio de la página
 
