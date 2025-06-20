@@ -2,6 +2,38 @@
 
 Este repositorio contiene el código fuente de mi Currículum Vitae en formato web. El proyecto fue desarrollado utilizando tecnologías como **HTML5**, **CSS3**, **Bootstrap 5** y **Bootstrap Icons**, con un diseño adaptable y profesional, ideal para destacar mi experiencia como desarrollador full stack.
 
+## 🛠 Mejoras de Accesibilidad
+
+### a. Uso Correcto de Etiquetas Semánticas
+- **Estructuración HTML:**  
+  Se han empleado etiquetas semánticas de HTML5 como `<header>`, `<nav>`, `<section>` y `<footer>`.  
+- **Identificación de Contenido Principal:**  
+  Se agregó el atributo `role="main"` al contenedor principal para identificar correctamente el contenido relevante.
+
+### b. Contraste Adecuado
+- **Colores y Fondos:**  
+  Se han ajustado los colores del texto y fondos para cumplir con las pautas WCAG, asegurando un contraste adecuado, por ejemplo, usando colores de alto contraste en secciones críticas.
+
+### c. Imágenes con Atributos Alt Descriptivos
+- **Atributo `alt`:**  
+  Todas las imágenes han sido revisadas y se han añadido descripciones claras en el atributo `alt`.
+
+### d. Formularios Accesibles
+- **Etiquetas `<label>`:**  
+  Se incorporaron etiquetas `<label>` asociadas a cada campo del formulario de contacto para mejorar la usabilidad y accesibilidad.
+- **Atributos `aria-label`:**  
+  Se añadieron atributos `aria-label` en botones (por ejemplo, en el botón de enviar mensaje) para ofrecer descripciones precisas a los lectores de pantalla.
+
+### e. Navegación con Teclado
+- **Enlaces Descriptivos:**  
+  Se mejoraron textos de botones y enlaces (evitando textos genéricos como "haz clic aquí") para que sean autoexplicativos, por ejemplo, cambiando "Ver más" por "Ver proyecto".
+
+### f. Tamaño de Fuente Ajustable
+- **Botones de Accesibilidad:**  
+  - Se añadieron botones flotantes que permiten a los usuarios aumentar el tamaño del texto o restablecerlo, cambiar el contraste y un botón para subir al inicio de la página
+
+---
+
 ## 🛠 Tecnologías utilizadas
 
 - HTML5

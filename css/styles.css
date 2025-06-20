@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap');
 
+
+
   * {
     --body-font: "Raleway", Helvetica, Arial, sans-serif;
     --title-font: "Outfit", Helvetica, Arial, sans-serif;
@@ -19,6 +21,8 @@
     padding: 0;
     line-height: 1.8em;
     word-spacing: 0px;
+    width: 100%;
+    max-width: 100vw
   }
 
   header{
@@ -64,7 +68,6 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    min-height: 100vh; /* Opcional: altura mínima */
   }
 
   p.lead {
@@ -525,3 +528,75 @@
         letter-spacing: 0;
     }
   }
+
+  /* Mejora de contraste para accesibilidad */
+  a.btn-primary,
+  .btn-primary {
+    background-color: #0d81ff;
+    color: #ffffff;
+  }
+
+  a.btn-primary:hover,
+  .btn-primary:hover {
+    background-color: #0b6ed1;
+  }
+
+  /* Accesibilidad con foco de teclado */
+  a:focus,
+  button:focus,
+  input:focus,
+  textarea:focus {
+    outline: 3px solid #6eb4ff;
+    outline-offset: 2px;
+  }
+
+  /* Estilo visible para etiquetas label */
+  label {
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: inline-block;
+  }
+
+  /* Modo de texto grande */
+  body.large-text {
+    font-size: 1.25em;
+  }
+
+  /* Modo alto contraste */
+  body.high-contrast {
+    background-color: #000 !important;
+    color: #FFF !important;
+  }
+
+  body.high-contrast header,
+  body.high-contrast footer,
+  body.high-contrast section {
+    background-color: #000 !important;
+    color: #FFF !important;
+  }
+
+  body.high-contrast a {
+    color: #00ffff !important;
+  }
+
+  #accessibility-panel {
+    position: fixed; 
+    bottom: 100px; 
+    right: 25px; 
+    z-index: 1000; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px;
+    font-size: 24px;
+  }
+
+  #accesibilidad-botones {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}
