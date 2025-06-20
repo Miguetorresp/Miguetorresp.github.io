@@ -35,13 +35,3 @@ Este repositorio contiene el código fuente de mi Currículum Vitae en formato w
 - 💻 GitHub: [@Miguetorresp](https://github.com/Miguetorresp)
 
 ---
-
-## 🖼️ Capturas del proyecto
-
-![Captura del CV](images/img_persona_programando.png)
-
----
-
-## 📢 Licencia
-
-Este proyecto es de uso educativo y personal. Puedes modificarlo libremente con fines no comerciales.
