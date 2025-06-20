@@ -55,4 +55,20 @@ window.addEventListener("scroll", function () {
     } else {
     header.classList.remove("scrolled");
     }
+    
+    // Mostrar el botón cuando el usuario hace scroll hacia abajo
+    const btn = document.getElementById('btn-ir-arriba');
+    if (window.scrollY > 200) {
+        btn.style.display = 'block';
+    } else {
+        btn.style.display = 'none';
+    }
 });
+
+// Scroll suave hacia arriba
+document.getElementById('btn-ir-arriba').addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+ // Inicializar tooltips en toda la página
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
