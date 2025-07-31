@@ -2,6 +2,27 @@
 
 Este repositorio contiene el código fuente de mi Currículum Vitae en formato web. El proyecto fue desarrollado utilizando tecnologías como **HTML5**, **CSS3**, **Bootstrap 5** y **Bootstrap Icons**, con un diseño adaptable y profesional, ideal para destacar mi experiencia como desarrollador full stack.
 
+# Seguimiento de Mirada con WebGazer.js y Heatmap.js
+
+Este proyecto integra **WebGazer.js** para capturar la mirada del usuario a través de la cámara y **Heatmap.js** para generar un **mapa de calor** con los puntos donde el usuario ha fijado su atención en la página.
+
+## ¿Qué hace el proyecto?
+
+- Inicia el seguimiento ocular desde la cámara del usuario.  
+- Registra la posición estimada de la mirada mientras navega por el sitio.  
+- Permite **detener el seguimiento** mediante un botón.  
+- Al detener, genera y muestra un **mapa de calor** con las zonas donde el usuario miró con mayor frecuencia.  
+
+---
+
+## ¿Cómo ejecutarlo?
+
+1. Clona el proyecto o descarga el HTML.
+2. **Importante:** el navegador solo permite acceso a la cámara bajo **HTTPS** o `localhost`.
+   ```bash
+   # Si quieres un servidor simple de pruebas
+   python3 -m http.server 8080
+
 ## 🛠 Mejoras de Accesibilidad
 
 ### a. Uso Correcto de Etiquetas Semánticas
@@ -41,6 +62,8 @@ Este repositorio contiene el código fuente de mi Currículum Vitae en formato w
 - Bootstrap 5
 - Bootstrap Icons
 - Google Fonts
+- WebGazer.js
+- Heatmap.js
 
 ---
 
