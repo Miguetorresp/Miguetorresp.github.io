@@ -13,6 +13,29 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* ====== Estilos para el mapa de calor y controles ====== */
+        #heatmapContainer {
+            position: absolute;      /* cubre todo el documento (no solo el viewport) */
+            top: 0; left: 0;
+            width: 0; height: 0;     /* se reajusta al iniciar */
+            display: none;           /* se muestra al detener */
+            pointer-events: none;    /* no bloquea clics */
+            z-index: 2147483647;     /* por encima de todo */
+        }
+        #eye-tracking-controls {
+            position: fixed;
+            bottom: 1rem;
+            right: 7rem;
+            z-index: 2147483647;
+            display: flex;
+            gap: .5rem;
+        }
+        /* Oculta los elementos de depuración de WebGazer */
+        #webgazerVideoFeed, #webgazerFaceOverlay, #webgazerFaceFeedbackBox, .webgazerPredictDot {
+            display: none !important;
+        }
+    </style>
 </head>
 <body class="dark-scheme">
     <header class="header-v2 header-full transparent" style="height: 90px;">
@@ -325,7 +348,157 @@
     <!-- Fondo oscuro al abrir menú -->
     <div id="menu-overlay"></div>
 
+    <!-- ====== Contenedor del Heatmap (cubre toda la página) ====== -->
+    <div id="heatmapContainer" aria-hidden="true"></div>
+
+     <!-- ====== Controles de seguimiento (iniciar / detener) ====== -->
+    <div id="eye-tracking-controls" class="shadow">
+        <button id="startTracking" class="btn btn-danger btn-sm">
+            <i class="bi bi-record-circle"></i> Iniciar seguimiento
+        </button>
+        <button id="stopTracking" class="btn btn-secondary btn-sm" disabled>
+            <i class="bi bi-stop-circle"></i> Detener y mostrar mapa
+        </button>
+    </div>
+
+    <!-- ====== Librerías necesarias ====== -->
+    <!-- WebGazer: estimación de mirada (requiere HTTPS) -->
+    <script src="https://webgazer.cs.brown.edu/webgazer.js" defer></script>
+    <!-- Heatmap.js -->
+    <script src="https://cdn.jsdelivr.net/npm/heatmap.js@2.0.5/build/heatmap.min.js" defer></script>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/script.js"></script>
+
+    <!-- ====== Lógica de seguimiento de mirada + mapa de calor ====== -->
+    <script>
+    (function(){
+        let collecting = false;
+        let gazeData = [];           // {x, y, value}
+        let lastSampleTs = 0;        // para limitar frecuencia
+        let heatmapInstance = null;
+
+        const btnStart = document.getElementById('startTracking');
+        const btnStop  = document.getElementById('stopTracking');
+        const heatmapContainer = document.getElementById('heatmapContainer');
+
+        // Ajusta el contenedor del heatmap al tamaño del documento
+        function sizeHeatmapContainer() {
+            const doc = document.documentElement;
+            const body = document.body;
+            const width  = Math.max(doc.scrollWidth,  body.scrollWidth,  doc.clientWidth);
+            const height = Math.max(doc.scrollHeight, body.scrollHeight, doc.clientHeight);
+            heatmapContainer.style.width  = width  + 'px';
+            heatmapContainer.style.height = height + 'px';
+        }
+
+        // Listener de mirada (WebGazer da coords relativas al viewport)
+        function onGaze(data, timestamp) {
+            if (!collecting || !data) return;
+
+            // Muestra de ~12 Hz para no saturar
+            if (timestamp - lastSampleTs < 80) return;
+            lastSampleTs = timestamp;
+
+            // Convertimos a coordenadas de página (sumando el scroll actual)
+            const x = Math.round((data.x || 0) + window.scrollX);
+            const y = Math.round((data.y || 0) + window.scrollY);
+
+            // Filtrado simple: descartamos valores claramente fuera del documento
+            if (x < 0 || y < 0) return;
+            if (x > heatmapContainer.offsetWidth || y > heatmapContainer.offsetHeight) return;
+
+            gazeData.push({ x, y, value: 1 });
+        }
+
+        async function startTracking() {
+            try {
+                sizeHeatmapContainer();
+                window.addEventListener('resize', sizeHeatmapContainer);
+
+                gazeData = [];
+                collecting = true;
+                heatmapContainer.style.display = 'none';
+
+                // Inicia WebGazer
+                await webgazer.setGazeListener(onGaze).begin();
+
+                // Oculta elementos de depuración de WebGazer (por si acaso)
+                try {
+                    webgazer.showVideoPreview(false);
+                    webgazer.showFaceOverlay(false);
+                    webgazer.showPredictionPoints(false);
+                } catch(e) { /* algunas versiones no exponen estos métodos */ }
+
+                btnStart.disabled = true;
+                btnStop.disabled  = false;
+
+                // Tip: pequeña "auto-calibración" empírica
+                // Pide al usuario mirar brevemente a esquinas y centro en los primeros 3–5 s.
+                console.log('Seguimiento iniciado. Mira distintas zonas de la pantalla por unos segundos para mejorar la calibración.');
+            } catch (err) {
+                console.error(err);
+                alert('No se pudo iniciar el seguimiento. Asegúrate de permitir la cámara y usar HTTPS.');
+            }
+        }
+
+        function stopTracking() {
+            collecting = false;
+
+            try {
+                // Libera cámara y listeners
+                webgazer.removeGazeListener(onGaze);
+                webgazer.end(); // detiene y libera la cámara
+            } catch(e) {
+                // si falla, al menos intentamos pausar
+                try { webgazer.pause(); } catch(_) {}
+            }
+
+            // Renderiza el heatmap con los datos capturados
+            renderHeatmap();
+
+            btnStart.disabled = false;
+            btnStop.disabled  = true;
+            console.log(`Seguimiento detenido. Puntos recolectados: ${gazeData.length}`);
+        }
+
+        function renderHeatmap() {
+            if (!gazeData.length) {
+                alert('No hay datos suficientes para generar el mapa de calor.');
+                return;
+            }
+
+            sizeHeatmapContainer();
+            heatmapContainer.style.display = 'block';
+
+            if (!heatmapInstance) {
+                heatmapInstance = h337.create({
+                    container: heatmapContainer,
+                    radius: 40,        // puedes ajustar el radio
+                    maxOpacity: 0.6,
+                    minOpacity: 0.1,
+                    blur: 0.85
+                });
+            }
+
+            // Calcula un max razonable según densidad
+            const max = Math.min(10, Math.max(2, Math.floor(gazeData.length / 200)));
+
+            heatmapInstance.setData({
+                max: max,
+                data: gazeData
+            });
+        }
+
+        // Botones
+        btnStart.addEventListener('click', startTracking);
+        btnStop.addEventListener('click', stopTracking);
+
+        // (Opcional) Si quisieras empezar automáticamente al cargar:
+        // window.addEventListener('load', startTracking);
+    })();
+    </script>
 </body>
 </html>
