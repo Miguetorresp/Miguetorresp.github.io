@@ -20,7 +20,7 @@ Este proyecto integra **WebGazer.js** para capturar la mirada del usuario a trav
 1. Clona el proyecto o descarga el HTML.
 2. **Importante:** el navegador solo permite acceso a la cámara bajo **HTTPS** o `localhost`.
    ```bash
-   # Si quieres un servidor simple de pruebas
+   # En caso de requerir un servidor simple de pruebas y luego usar ngrok
    python3 -m http.server 8080
 
 ## 🛠 Mejoras de Accesibilidad
